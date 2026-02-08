@@ -12,10 +12,10 @@ export const httpArcjet = arcjet({
   rules: [
     // shield which will have a mode: this protect us against most common attacts such as SQL Injection or XSS by analysing the structure of incoming requests.
     shield({ mode: arcjetMode }),
-    // detectBot({
-    //   mode: arcjetMode,
-    //   allow: ['CATEGORY:SEARCH_ENGINE', 'CATEGORY:PREVIEW'],
-    // }),
+    detectBot({
+      mode: arcjetMode,
+      allow: ['CATEGORY:SEARCH_ENGINE', 'CATEGORY:PREVIEW'],
+    }),
     slidingWindow({ mode: arcjetMode, interval: '10s', max: 50 }),
   ],
 });
@@ -25,10 +25,10 @@ export const wsArcjet = arcjet({
   rules: [
     // shield which will have a mode: this protect us against most common attacts such as SQL Injection or XSS by analysing the structure of incoming requests.
     shield({ mode: arcjetMode }),
-    // detectBot({
-    //   mode: arcjetMode,
-    //   allow: ['CATEGORY:SEARCH_ENGINE', 'CATEGORY:PREVIEW'],
-    // }),
+    detectBot({
+      mode: arcjetMode,
+      allow: ['CATEGORY:SEARCH_ENGINE', 'CATEGORY:PREVIEW'],
+    }),
     slidingWindow({ mode: arcjetMode, interval: '2s', max: 5 }),
   ],
 });

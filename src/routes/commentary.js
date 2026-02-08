@@ -88,15 +88,14 @@ commentaryRouter.post('/', async (req, res) => {
   }
 
   try {
-    const { id: matchId } = paramsParsed.data;
-    console.log('🚀 ~ matchId:', matchId);
+    const matchId = Number(paramsParsed.data.id);
     const payload = bodyParsed.data;
 
     // 3️⃣ Insert commentary into DB
     const [createdCommentary] = await db
       .insert(commentary)
       .values({
-        matchId: Number(matchId),
+        matchId,
         ...payload,
       })
       .returning();
