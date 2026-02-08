@@ -2,6 +2,7 @@ import http from 'http';
 import express from 'express';
 import { matchRouter } from './routes/matches.js';
 import { attachWebSocketServer } from './ws/server.js';
+import { securityMiddleware } from './arcjet.js';
 
 const PORT = Number(process.env.PORT || 8000);
 const HOST = process.env.HOST || '0.0.0.0';
@@ -11,6 +12,7 @@ const app = express();
 const server = http.createServer(app);
 
 app.use(express.json());
+app.use(securityMiddleware());
 
 app.get('/', (req, res) => {
   res.send('Hello, Backend World!'); // Send a response
@@ -26,5 +28,7 @@ server.listen(PORT, HOST, () => {
     HOST === '0.0.0.0' ? `http://localhost:${PORT}` : `http://${HOST}:${PORT}`;
 
   console.log(`Server is running on ${baseUrl}`);
-  console.log(`Websocket server is running on ${baseUrl.replace('http', 'ws')}/ws`)
+  console.log(
+    `Websocket server is running on ${baseUrl.replace('http', 'ws')}/ws`,
+  );
 });
