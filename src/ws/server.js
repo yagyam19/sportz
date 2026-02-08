@@ -33,19 +33,19 @@ export function attachWebSocketServer(server) {
 
     socket.on('error', console.error);
 
-    const interval = setInterval(() => {
+    const heartbeatInterval = setInterval(() => {
       wss.clients.forEach((ws) => {
-        if (!ws.isAlive) return ws.terminate();
+        if (!ws.isAlive) {
+          ws.terminate();
+          return;
+        }
         ws.isAlive = false;
         ws.ping();
-      }, 30000);
-    });
+      });
+    }, 30000);
 
-    socket.on('close', () => {
-      console.log(
-        `WebSocket client disconnected. Total clients: ${wss.clients.size}`,
-      );
-      clearInterval(interval);
+    wss.on('close', () => {
+      clearInterval(heartbeatInterval);
     });
   });
 
