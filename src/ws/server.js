@@ -44,7 +44,7 @@ export function attachWebSocketServer(server) {
           return;
         }
       } catch (error) {
-        console.log('🚀 ~ attachWebSocketServer ~ error:', error);
+        console.error('Arcjet WebSocket error:', error);
         socket.close(1011, 'Server security error');
       }
     }
@@ -65,21 +65,21 @@ export function attachWebSocketServer(server) {
     sendJSON(socket, { type: 'Welcome' });
 
     socket.on('error', console.error);
+  });
 
-    const heartbeatInterval = setInterval(() => {
-      wss.clients.forEach((ws) => {
-        if (!ws.isAlive) {
-          ws.terminate();
-          return;
-        }
-        ws.isAlive = false;
-        ws.ping();
-      });
-    }, 30000);
-
-    wss.on('close', () => {
-      clearInterval(heartbeatInterval);
+  const heartbeatInterval = setInterval(() => {
+    wss.clients.forEach((ws) => {
+      if (!ws.isAlive) {
+        ws.terminate();
+        return;
+      }
+      ws.isAlive = false;
+      ws.ping();
     });
+  }, 30000);
+
+  wss.on('close', () => {
+    clearInterval(heartbeatInterval);
   });
 
   function broadcastMatchCreated(match) {
