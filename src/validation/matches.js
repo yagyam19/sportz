@@ -31,11 +31,7 @@ export const matchIdParamSchema = z.object({
 /**
  * Utility: ISO date validation
  */
-const isoDateString = z
-  .string()
-  .refine((value) => !Number.isNaN(Date.parse(value)), {
-    message: 'Invalid ISO date string',
-  });
+const isoDateString = z.iso.datetime();
 
 /**
  * Schema: create match
