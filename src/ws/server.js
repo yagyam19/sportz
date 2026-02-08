@@ -22,7 +22,13 @@ export function attachWebSocketServer(server) {
     maxPayload: 1024 * 1024,
   });
 
-  wss.on('connection', async (socket, req) => {
+  server.on('upgrade', async (req, socket, head) => {
+    const { pathname } = new URL(req.url, `http://${req.headers.host}`);
+
+    if (pathname !== '/ws') {
+      return;
+    }
+
     if (wsArcjet) {
       try {
         const decision = await wsArcjet.protect(req);
@@ -30,7 +36,9 @@ export function attachWebSocketServer(server) {
         if (decision.isDenied()) {
           const rateLimitProblem = decision.reason.isRateLimit();
           const code = rateLimitProblem ? 1013 : 1008;
-          const reason = rateLimitProblem ? 'Rate limit exceeded' : 'Access Denied';
+          const reason = rateLimitProblem
+            ? 'Rate limit exceeded'
+            : 'Access Denied';
 
           socket.close(code, reason);
           return;
@@ -41,6 +49,12 @@ export function attachWebSocketServer(server) {
       }
     }
 
+    wss.handleUpgrade(req, socket, head, (ws) => {
+      wss.emit('connection', ws, req);
+    });
+  });
+
+  wss.on('connection', async (socket) => {
     socket.isAlive = true;
     socket.on('pong', () => {
       socket.isAlive = true;
