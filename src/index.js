@@ -1,3 +1,7 @@
+import AgentAPI from 'apminsight';
+
+AgentAPI.config();
+
 import http from 'http';
 import express from 'express';
 import { matchRouter } from './routes/matches.js';
@@ -22,7 +26,8 @@ app.get('/', (req, res) => {
 app.use('/matches', matchRouter);
 app.use('/matches/:id/commentary', commentaryRouter);
 
-const { broadcastMatchCreated, broadcastCommentary } = attachWebSocketServer(server);
+const { broadcastMatchCreated, broadcastCommentary } =
+  attachWebSocketServer(server);
 app.locals.broadcastMatchCreated = broadcastMatchCreated;
 app.locals.broadcastCommentary = broadcastCommentary;
 
