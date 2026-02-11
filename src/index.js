@@ -1,5 +1,5 @@
-import AgentAPI from 'apminsight';
-AgentAPI.config();
+// import AgentAPI from 'apminsight';
+// AgentAPI.config();
 
 import http from 'http';
 import express from 'express';
